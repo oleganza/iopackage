@@ -1,0 +1,8 @@
+iopackage - Io code package manager based on Git repositories.
+
+Examples:
+
+  Amanda := Package select("git://github.com/oleganza/amanda.git", "8ebe4510990cdc010e9") load  # guess "amanda.io" or "main.io"
+  Amanda := Package select("git://github.com/oleganza/amanda.git", "8ebe4510990cdc010e9") load("somefile.io")
+  
+  
