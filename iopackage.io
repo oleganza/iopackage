@@ -1,20 +1,29 @@
 #!/usr/bin/env io
 
 Package := Object clone do(
-  path   ::= nil
+  url    ::= nil
   commit ::= nil
   
-  select := method(path, commit,
-    clone setPath(path) setCommit(commit)
+  select := method(url, commit,
+    clone setUrl(url) setCommit(commit)
   )
   
   load := method(name,
     if(name isNil, name := guessNameFromPath(path))
-    
+    doFile(fullPathToFile(url, commit, name))
   )
   
   guessNameFromPath := method(path,
-    # TODO
+    # some magic here
     "default.io"
   )
+  
+  fullPathToFile := method(url, commit, filename,
+    
+  )
+  
+)
+
+if(isLaunchScript,
+  
 )
