@@ -22,6 +22,10 @@ Package := Object clone do(
     
   )
   
+  cloneRepo := method(url, path,
+    System system("git clone " appendSeq(url) appendSeq(" ") appendSeq(path))
+  )
+  
 )
 
 if(isLaunchScript,
