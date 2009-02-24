@@ -5,4 +5,48 @@ Examples:
   Amanda := Package select("git://github.com/oleganza/amanda.git", "8ebe4510990cdc010e9") load  # guess "amanda.io" or "main.io"
   Amanda := Package select("git://github.com/oleganza/amanda.git", "8ebe4510990cdc010e9") load("somefile.io")
   
-  
+Design notes.
+
+1. Each program is a package.
+2. Each package requires other packages specifying strict version.
+3. Each package is loaded into local context. Therefore, multiple 
+   different versions of the same package could be loaded in the same state.  
+
+Real world example:
+
+1. App requires A5, B5, C5.
+2. A5 requires B3, C5 requires A3.
+3. A5, B5 and C5 are the first-level libraries (App is a zero-level library).
+   Each of them could be hacked/forked: App may specify development versions like A5.1 or B5.2.
+4. Package system should allow use of different medias and repositories:
+   tarballs, git, mercurial, bazaar, subversion, name-your-repository. 
+   Thus, multiple versions could be defined.
+   Example:
+
+     p := Package clone 
+     p setGitVersion("1fd726b78ea55c612ae676bf")
+     p setHgVersion("5c12a8e6be676fd727a516bf")
+     p setGenericVersion("1.0")
+     p setName("amanda")
+     p setGitURLs(list("git://github.com/oleganza/amanda.git", "/var/git/amanda.git"))
+     p appendGitURL("git://github.com/oleganza/amanda.git")
+     p prependGitURL("git://github.com/oleganza/amanda.git")
+     
+     # finds, loads code, checks out and verifies versions; throws Package Error if something's wrong.
+     p prepare
+     
+     # loads file (default seach list is list("default.io", "main.io", "package-init.rb"))
+     p load("main.io") 
+     
+     Refactor:
+     
+     GitSource := Source clone do(
+       # returns a path on local filesystem
+       prepare := method(version, urls,
+         
+       )
+     )
+     
+     
+5. 
+   
