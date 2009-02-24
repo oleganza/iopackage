@@ -47,6 +47,11 @@ Real world example:
        )
      )
      
+     p := Package clone
+     p addSource(GitSource clone setVersion("fb127e87fa78bc3761") appendURL("..."))
+     p addSource(HgSource clone setVersion("fb127e87fa78bc3761") appendURL("..."))
+     p prepare
+     p load
      
 5. 
    
