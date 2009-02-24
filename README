@@ -41,7 +41,7 @@ Real world example:
      Refactor:
      
      GitSource := Source clone do(
-       # returns a path on local filesystem
+       # returns a path on local filesystem to the package root folder
        prepare := method(version, urls,
          
        )
