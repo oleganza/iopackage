@@ -22,25 +22,8 @@ Real world example:
    tarballs, git, mercurial, bazaar, subversion, name-your-repository. 
    Thus, multiple versions could be defined.
    Example:
-
-     p := Package clone 
-     p setGitVersion("1fd726b78ea55c612ae676bf")
-     p setHgVersion("5c12a8e6be676fd727a516bf")
-     p setGenericVersion("1.0")
-     p setName("amanda")
-     p setGitURLs(list("git://github.com/oleganza/amanda.git", "/var/git/amanda.git"))
-     p appendGitURL("git://github.com/oleganza/amanda.git")
-     p prependGitURL("git://github.com/oleganza/amanda.git")
      
-     # finds, loads code, checks out and verifies versions; throws Package Error if something's wrong.
-     p prepare
-     
-     # loads file (default seach list is list("default.io", "main.io", "package-init.rb"))
-     p load("main.io") 
-     
-     Refactor:
-     
-     GitSource := Source clone do(
+     Package Git := Package Source clone do(
        # returns a path on local filesystem to the package root folder
        prepare := method(version, urls,
          
@@ -48,10 +31,14 @@ Real world example:
      )
      
      p := Package clone
-     p addSource(GitSource clone setVersion("fb127e87fa78bc3761") appendURL("..."))
-     p addSource(HgSource clone setVersion("fb127e87fa78bc3761") appendURL("..."))
+     p addSource(Package Git clone setVersion("fb127e87fa78bc3761") appendURL("...soft.git"))
+     p addSource(Package Hg clone setVersion("fb127e87fa78bc3761") appendURL("...soft.hg"))
+     p addSource(Package Tarball clone setVersion("fb127e87fa78bc3761") appendURL("...soft.tar.gz"))
      p prepare
-     p load
+     MySoft := p load("init.io")
+     
+     # Shorter (sets version for all URLs):
+     MySoft := Package withURLs("git://", "file://...", "") setVersion("1.0") load("package-init.io")
      
 5. 
    
