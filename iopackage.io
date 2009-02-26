@@ -13,7 +13,7 @@
   
   Special files:
     
-    package-init.io is loaded by load() method if filename is not supplied
+    package-load.io is loaded by load() method if filename is not supplied
     package-install.io is executed by package installer once per installation
     .iopackage_installation is created on installation; contains Io object:
       Object clone do(
@@ -24,9 +24,15 @@
 */
 
 Package := Object clone do(
-  url    ::= nil
-  commit ::= nil
+  sources ::= list()
   
+  loadFileName    := "package-load.io"
+  installFileName := "package-install.io"
+  infoFileName    := ".iopackage_installation"
+  
+  doRelativeFile("GuessSource.io")
+  doRelativeFile("Sources.io")
+    
   // Shortcut for select() load
   require := method(url, version,
     select(url, version) load
@@ -43,48 +49,25 @@ Package := Object clone do(
     package
   )
   
-  // Guess the source and add it
-  addGuessedSource := method(url, version,
-    addSource(guessSource(url, version) setVersion(version) addURL(url))
-  )
-  
   // Add source
-  addSource := method(source)
+  addSource := method(source,
+    sources append(source)
+    self
+  )
   
   // Loads source code and returns resulting object
   // Default name is "package-init.io"
   load := method(name,
-    if(name isNil, name := defaultName) 
-    doFile(fullPathToFile(url, commit, name))
+    if(name isNil, name := loadFileName) 
+    doFile(fullPathToFile(url, version, name))
   )
   
-  defaultName := "package-init.io"
   
-  fullPathToFile := method(url, commit, filename,
-    1
+  fullPathToFile := method(url, version, filename,
+    ""
   )
   
-  Source := Object clone do(
-    urls ::= List clone()
-    version ::= nil
-    appendURL := method(url, 
-      urls append(url)
-    )
-  )
   
-  Git := Source clone do(
-    prepare := method(version, urls, 
-      
-      
-      System system("git clone ")
-    )
-  )
-  
-/*  
-  TODO: add registerSource()
-  appendProto(doRelativeFile("administration.io"))
-  appendProto(doRelativeFile("sources.io"))
-*/  
   if(isLaunchScript, clone do(
     Verify := doRelativeFile("verify.io")
     Verify clone do(
