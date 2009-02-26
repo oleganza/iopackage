@@ -17,13 +17,22 @@ Package := Object clone do(
   url    ::= nil
   commit ::= nil
   
-  select := method(url, commit,
-    clone setUrl(url) setCommit(commit)
+  // Shortcut for select() load
+  require := method(url, version,
+    select(url, version) load
   )
   
-  # Default name is "package-init.io"
+  // Creates a new Package instance with prepared paths
+  select := method(urls, commit,
+    // make a list out of string
+    if(urls isKindOf(Sequence), urls = list(urls)) 
+    
+  )
+  
+  // Loads source code and returns resulting object
+  // Default name is "package-init.io"
   load := method(name,
-    if(name isNil, name := defaultName)
+    if(name isNil, name := defaultName) 
     doFile(fullPathToFile(url, commit, name))
   )
   
@@ -44,11 +53,14 @@ Package := Object clone do(
   Git := Source clone do(
     prepare := method(version, urls, 
       
+      
+      System system("git clone ")
     )
   )
   
 )
 
 if(isLaunchScript,
+  
   
 )
