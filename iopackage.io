@@ -61,7 +61,7 @@ Package := Object clone do(
   defaultName := "package-init.io"
   
   fullPathToFile := method(url, commit, filename,
-    
+    1
   )
   
   Source := Object clone do(
@@ -80,14 +80,20 @@ Package := Object clone do(
     )
   )
   
+/*  
+  TODO: add registerSource()
+  appendProto(doRelativeFile("administration.io"))
+  appendProto(doRelativeFile("sources.io"))
+*/  
+  if(isLaunchScript, clone do(
+    Verify := doRelativeFile("verify.io")
+    Verify clone do(
+      methods := method(
+        verify(true)
+      )
+    ) run shortFormat println
+  ))
+  
+  
 )
 
-if(isLaunchScript,
-  
-  Verify := doRelativeFile("verify.io")
-  Verify clone do(
-    methods := method(
-      
-    )
-  )
-)
