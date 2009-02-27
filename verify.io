@@ -11,7 +11,7 @@ Object clone do(
       str
     )
     
-    failureSummmary := method(
+    failureSummary := method(
       str := "" asMutable
       foreach(result, 
         if(result exception,
@@ -46,13 +46,16 @@ Object clone do(
   run := method(
     results := Results clone
     self slotNames foreach(slotName,
-      args := self getSlot(slotName) argumentNames
-      if(args isEmpty, results append(_performTest(slotName)))
+      slot := self getSlot(slotName)
+      if(slot hasSlot("argumentNames"), // slot could not be a method
+        if(slot argumentNames isEmpty, results append(_performTest(slotName)))
+      )
     )
     results
   )
   
   _performTest := method(slotName,
+    self println
     e := try(self getSlot(slotName) call)
     Result clone setMethodName(slotName) setException(e) 
   )
@@ -95,7 +98,7 @@ Object clone do(
     
       results := tests run
       results shortFormat println
-      results failureSummmary println
+      results failureSummary println
     )
   ) // isLaunchScript
 ) 

@@ -4,8 +4,13 @@ Source := Object clone do(
   appendURL := method(url, 
     urls append(url)
   )
+  
+  SetupFailed := Exception do(
+    errors ::= list()
+    
+  )
 )
 
 doRelativeFile("GitSource.io")
-//TODO:doRelativeFile("HgSource.io")
-//TODO:doRelativeFile("BundledSource.io")
+//TODO: doRelativeFile("HgSource.io")
+//TODO: doRelativeFile("TarballSource.io")

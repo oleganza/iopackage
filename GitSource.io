@@ -1,17 +1,19 @@
 
 Git := Source clone do(
-  prepare := method(version, urls, 
+  setup := method(version, url,
     
     
     System system("git clone ")
   )
 )
 
-// FIXME: always returns git source
+// Returns Git for git urls and nil otherwise.
 GitRule := Object clone do(
+  source ::= nil
   apply := method(url, version,
-    Git
+    // FIXME: always returns git source
+    source
   )
-)
+) setSource(Git)
 
 appendURLRule(GitRule)

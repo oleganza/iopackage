@@ -25,9 +25,10 @@
 
 Package := Object clone do(
   sources ::= list()
+  setupInfo ::= nil
   
-  loadFileName    := "package-load.io"
-  installFileName := "package-install.io"
+  loadFileName    := "packageLoad.io"
+  installFileName := "packageInstall.io"
   infoFileName    := ".iopackage_installation"
   
   doRelativeFile("GuessSource.io")
@@ -41,22 +42,37 @@ Package := Object clone do(
   // Creates a new Package instance with prepared paths
   select := method(urls, version,
     // make a list out of string
-    if(urls isKindOf(Sequence), urls = list(urls))
+    if(urls isKindOf(List) not, urls = list(urls))
     package := clone
     urls foreach(url,
       package addGuessedSource(url, version)
     )
+    setSetupInfo(package setup)
     package
   )
-  
+    
   // Add source
   addSource := method(source,
     sources append(source)
     self
   )
   
+  // Try one of the sources to set up and return setupInfo on success.
+  // Raises Source SetupFailed when all sources failed to setup.
+  setup := method(
+    errors := list()
+    sources foreach(source,
+      e := try(setupInfo := source setup) 
+      e catch(source SetupFailed, // catch polymorphic exception
+        errors append(e error)
+      ) pass // pass ther exceptions
+      e ifNil(return setupInfo)
+    )
+    Source SetupFailed clone setErrors(errors) raise("All sources failed to setup! See SetupFailed errors for more info.")
+  )
+  
   // Loads source code and returns resulting object
-  // Default name is "package-init.io"
+  // Default name is loadFileName
   load := method(name,
     if(name isNil, name := loadFileName) 
     doFile(fullPathToFile(url, version, name))
@@ -69,12 +85,14 @@ Package := Object clone do(
   
   
   if(isLaunchScript, clone do(
-    Verify := doRelativeFile("verify.io")
-    Verify clone do(
-      methods := method(
-        verify(true)
+    lib := clone
+    v := doRelativeFile("verify.io") clone
+    v lib := lib
+    v do(
+      badConfiguration := method(
+        verify( lib clone load )
       )
-    ) run shortFormat println
+    ) run failureSummary println
   ))
   
   

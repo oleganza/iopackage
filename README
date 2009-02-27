@@ -34,7 +34,7 @@ Real world example:
      p addSource(Package Git clone setVersion("fb127e87fa78bc3761") appendURL("...soft.git"))
      p addSource(Package Hg clone setVersion("fb127e87fa78bc3761") appendURL("...soft.hg"))
      p addSource(Package Tarball clone setVersion("fb127e87fa78bc3761") appendURL("...soft.tar.gz"))
-     p prepare
+     p setup
      MySoft := p load("init.io")
      
      # Shorter (sets version for all URLs):
